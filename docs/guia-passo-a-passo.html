@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <title>ImobiFlow — Guia passo a passo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #141414;
+      --paper: #e8ebe6;
+      --field: #0f5c40;
+      --survey: #f0c43c;
+      --slate: #4e5853;
+      --white: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    @page { size: A4; margin: 16mm 14mm 18mm; }
+    @page :first { margin: 0; }
+    html, body {
+      background: var(--white);
+      color: var(--ink);
+      font-family: "Source Sans 3", "Segoe UI", sans-serif;
+      font-size: 10.8pt;
+      line-height: 1.45;
+    }
+    h1, h2, h3 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+      line-height: 1.08;
+    }
+    .mono {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 8pt;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .code {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 8.4pt;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    pre.codeblock {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 8.4pt;
+      background: var(--paper);
+      border-left: 4px solid var(--ink);
+      padding: 3.5mm 4mm;
+      margin: 2mm 0 5mm;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .tape {
+      height: 6px;
+      background: repeating-linear-gradient(-45deg, var(--ink) 0 7px, var(--survey) 7px 14px);
+    }
+    .cover {
+      min-height: 297mm;
+      background: var(--ink);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      page-break-after: always;
+    }
+    .cover-inner {
+      flex: 1;
+      padding: 22mm 18mm 16mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .mark { width: 42px; height: 42px; }
+    .cover h1 { font-size: 36pt; max-width: 155mm; margin-top: 8mm; }
+    .cover .lede {
+      max-width: 135mm;
+      color: rgba(255,255,255,.72);
+      font-size: 12.5pt;
+      margin-top: 8mm;
+    }
+    .cover-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 1px solid rgba(240,196,60,.4);
+      padding-top: 8mm;
+      color: var(--survey);
+    }
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 4mm;
+      margin-bottom: 7mm;
+    }
+    .chapter { page-break-before: always; }
+    h2 { font-size: 19pt; margin: 0 0 3.5mm; }
+    h3 { font-size: 12.2pt; margin: 6mm 0 2mm; color: var(--field); }
+    p { margin: 0 0 3mm; }
+    ul, ol { margin: 0 0 3.5mm 5mm; }
+    li { margin-bottom: 1.3mm; }
+    .toc ol { list-style: none; margin: 0; }
+    .toc li {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px dotted rgba(20,20,20,.25);
+      padding: 2.1mm 0;
+      margin: 0;
+    }
+    .toc a { color: inherit; text-decoration: none; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2mm 0 5mm;
+      font-size: 9.5pt;
+    }
+    th {
+      text-align: left;
+      background: var(--ink);
+      color: var(--white);
+      padding: 2mm 2.8mm;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 7.2pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    td {
+      padding: 2.2mm 2.8mm;
+      border-bottom: 1px solid rgba(20,20,20,.12);
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: var(--paper); }
+    .callout {
+      background: var(--paper);
+      border-left: 4px solid var(--survey);
+      padding: 3.5mm 4.5mm;
+      margin: 3mm 0 5mm;
+    }
+    .callout strong { display: block; margin-bottom: 1mm; }
+    .steps {
+      counter-reset: passo;
+      list-style: none;
+      margin: 2mm 0 5mm;
+    }
+    .steps li {
+      counter-increment: passo;
+      position: relative;
+      padding: 2.6mm 0 2.6mm 15mm;
+      border-bottom: 1px solid rgba(20,20,20,.1);
+      margin: 0;
+    }
+    .steps li::before {
+      content: counter(passo, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: 2.8mm;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 7.5pt;
+      letter-spacing: 0.08em;
+      background: var(--survey);
+      color: var(--ink);
+      padding: 0.8mm 1.4mm;
+      font-weight: 500;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.5mm 2mm;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 7.2pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .badge-draft { background: #d0d6d1; }
+    .badge-pending { background: var(--survey); color: var(--ink); }
+    .badge-pub { background: var(--field); color: var(--white); }
+    .foot {
+      margin-top: 7mm;
+      padding-top: 3mm;
+      border-top: 1px solid rgba(20,20,20,.15);
+      display: flex;
+      justify-content: space-between;
+      color: var(--slate);
+      font-size: 8pt;
+    }
+    @media print {
+      .cover { min-height: 297mm; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div class="tape"></div>
+    <div class="cover-inner">
+      <div>
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" fill="#F0C43C"/>
+          <rect x="3" y="3" width="11" height="11" fill="#141414"/>
+          <rect x="18" y="3" width="11" height="11" fill="#141414"/>
+          <rect x="3" y="18" width="11" height="11" fill="#141414"/>
+          <polygon points="22.5,16.2 28.8,22.5 22.5,28.8 16.2,22.5" fill="#141414"/>
+        </svg>
+        <p class="mono" style="margin-top:8mm;color:#F0C43C">SaaS imobiliário · MVP 1.0</p>
+        <h1>Guia passo a passo do projecto ImobiFlow</h1>
+        <p class="lede">Do arranque no computador até ao lead no WhatsApp do corretor — o que o projecto é, o que faz, e a ordem exacta em que se usa.</p>
+      </div>
+      <div class="cover-meta mono">
+        <span>Agosto 2026</span>
+        <span>imobiflow.app</span>
+        <span>Caderneta de campo</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="page-head">
+      <span class="mono">ImobiFlow</span>
+      <span class="mono">Índice</span>
+    </div>
+    <h2>Ordem deste caderno</h2>
+    <nav class="toc">
+      <ol>
+        <li><a href="#p0">O que é este projecto</a><span class="mono">02</span></li>
+        <li><a href="#p1">Passo 1 · Ligar no computador</a><span class="mono">02</span></li>
+        <li><a href="#p2">Passo 2 · Percorrer a demo</a><span class="mono">03</span></li>
+        <li><a href="#p3">Passo 3 · Abrir uma imobiliária</a><span class="mono">04</span></li>
+        <li><a href="#p4">Passo 4 · Marca e vitrine</a><span class="mono">05</span></li>
+        <li><a href="#p5">Passo 5 · Convidar a equipa</a><span class="mono">06</span></li>
+        <li><a href="#p6">Passo 6 · Cadastrar um imóvel</a><span class="mono">07</span></li>
+        <li><a href="#p7">Passo 7 · Aprovar e publicar</a><span class="mono">08</span></li>
+        <li><a href="#p8">Passo 8 · O cliente na vitrine</a><span class="mono">09</span></li>
+        <li><a href="#p9">Passo 9 · Lead e WhatsApp</a><span class="mono">10</span></li>
+        <li><a href="#p10">Como o código está organizado</a><span class="mono">11</span></li>
+        <li><a href="#p11">O que ainda não faz</a><span class="mono">12</span></li>
+      </ol>
+    </nav>
+    <div class="callout">
+      <strong>Como usar este guia</strong>
+      Siga os passos pela ordem. Os primeiros dois ligam o projecto e mostram a demo. Do três ao nove é o dia-a-dia de uma imobiliária. Os últimos descrevem as pastas do código, para quem vai evoluir o MVP.
+    </div>
+  </section>
+
+  <section class="chapter" id="p0">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">0 · 1</span>
+    </div>
+    <h2>O que é este projecto</h2>
+    <p>O ImobiFlow é uma plataforma SaaS (software como serviço) para várias imobiliárias ao mesmo tempo. Cada casa tem a sua caderneta isolada: imóveis, corretores, marca e leads não se misturam com os da agência ao lado.</p>
+    <p>O ciclo de negócio é este: o corretor cadastra o imóvel no terreno (foto + GPS), a gestão aprova, o cliente vê a vitrine no site da agência, o pedido de visita chega ao WhatsApp do responsável.</p>
+    <p>Há dois sítios na aplicação:</p>
+    <ul>
+      <li><strong>Site da plataforma</strong> — <span class="code">/</span>, <span class="code">/pricing</span>, <span class="code">/register</span>, <span class="code">/login</span>.</li>
+      <li><strong>Painel</strong> — <span class="code">/dashboard</span>, só com sessão.</li>
+      <li><strong>Vitrine</strong> — o que o público vê, em <span class="code">/t/{slug}</span> ou no domínio da casa.</li>
+    </ul>
+    <p>Dois cargos: <strong>gestão (ADMIN)</strong> abre a conta, aprova anúncios e trata da marca; <strong>corretor (AGENT)</strong> cadastra imóveis e responde aos seus leads.</p>
+
+    <h2 id="p1">Passo 1 · Ligar no computador</h2>
+    <p>O código da aplicação está na pasta aninhada <span class="code">ImobiFlow/</span> (há um <span class="code">package.json</span> aí, não na raiz do repositório).</p>
+    <ol class="steps">
+      <li>Abra o terminal e entre nessa pasta: <span class="code">cd ImobiFlow</span>.</li>
+      <li>Se ainda não existir <span class="code">.env</span>, copie: <span class="code">cp .env.example .env</span>.</li>
+      <li>Instale dependências: <span class="code">npm install</span>.</li>
+      <li>Crie as tabelas: <span class="code">npx prisma db push</span>.</li>
+      <li>Carregue a imobiliária de demonstração: <span class="code">npx prisma db seed</span>. (O seed recusa correr se <span class="code">NODE_ENV=production</span>.)</li>
+      <li>Arranque: <span class="code">npm run dev</span>.</li>
+      <li>Abra <span class="code">http://localhost:3000</span>.</li>
+    </ol>
+    <pre class="codeblock">cd ImobiFlow
+cp .env.example .env
+npm install
+npx prisma db push
+npx prisma db seed
+npm run dev</pre>
+    <p>Variáveis úteis no <span class="code">.env</span>: <span class="code">DATABASE_URL</span> (SQLite local), <span class="code">AUTH_SECRET</span>, <span class="code">AUTH_URL</span>, <span class="code">NEXT_PUBLIC_ROOT_DOMAIN</span>. WhatsApp e Cloudinary são opcionais — sem eles, o lead grava-se na mesma e as fotos ficam em <span class="code">/public/uploads</span>.</p>
+  </section>
+
+  <section class="chapter" id="p2">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">2</span>
+    </div>
+    <h2>Passo 2 · Percorrer a demo</h2>
+    <p>O seed cria a imobiliária <strong>Atlântica Residências</strong> (slug <span class="code">atlantica</span>), dois corretores, vários imóveis publicados e um lead de exemplo.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Papel</th>
+          <th>Email</th>
+          <th>Palavra-passe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Gestão</td>
+          <td><span class="code">maria@atlantica.pt</span></td>
+          <td><span class="code">demo1234</span></td>
+        </tr>
+        <tr>
+          <td>Corretor</td>
+          <td><span class="code">joao@atlantica.pt</span></td>
+          <td><span class="code">demo1234</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <ol class="steps">
+      <li>Na página inicial, clique <strong>Percorrer a vitrine demo</strong> (ou abra <span class="code">/t/atlantica</span>). Isto é o que o cliente vê: lista, mapa, filtros.</li>
+      <li>Abra um imóvel publicado. Veja fotografias, preço, pino e o formulário <strong>Falar com o corretor</strong>.</li>
+      <li>Volte a <span class="code">/</span> e clique <strong>Entrar</strong>. Use a Maria para o painel de gestão.</li>
+      <li>No <strong>Quadro</strong> vê totais de imóveis, leads e anúncios à espera de aprovação.</li>
+      <li>Saia e entre com o João. O corretor só vê a sua carteira — não vê Equipa nem Marca.</li>
+    </ol>
+    <div class="callout">
+      <strong>Subdomínio local (opcional)</strong>
+      Se o sistema resolver <span class="code">*.localhost</span>, a mesma vitrine abre em <span class="code">http://atlantica.localhost:3000</span>. O middleware reescreve o host para <span class="code">/t/atlantica</span>.
+    </div>
+  </section>
+
+  <section class="chapter" id="p3">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">3</span>
+    </div>
+    <h2>Passo 3 · Abrir uma imobiliária</h2>
+    <p>Isto cria uma caderneta nova, isolada da Atlântica. Use outro email — o da demo já está ocupado.</p>
+    <ol class="steps">
+      <li>Na inicial, clique <strong>Abrir a minha imobiliária</strong> (ou <span class="code">/register</span>).</li>
+      <li>Preencha o <strong>nome da imobiliária</strong> (ex.: Costa &amp; Serra).</li>
+      <li>Opcional: <strong>subdomínio da vitrine</strong>. Letras e hífens. Se deixar em branco, o sistema gera a partir do nome (<span class="code">costa-serra</span>).</li>
+      <li>O seu nome, email, telefone e uma palavra-passe com pelo menos 8 caracteres. O telefone da gestão não é o que recebe o lead — o alerta vai para o telefone do corretor dono do anúncio.</li>
+      <li>Submeta <strong>Criar imobiliária</strong>. Entra no painel como gestão.</li>
+    </ol>
+    <p>O que o sistema fez: criou um <em>tenant</em> (a caderneta), gerou o slug único, e criou o primeiro utilizador com cargo ADMIN. A vitrine fica em <span class="code">/t/o-seu-slug</span> — ainda vazia, até publicar imóveis.</p>
+    <p>Para voltar noutro dia: <strong>Entrar</strong> com o mesmo email. A sessão dura 8 horas. Se a conta for apagada, o cookie deixa de valer.</p>
+  </section>
+
+  <section class="chapter" id="p4">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">4</span>
+    </div>
+    <h2>Passo 4 · Marca e vitrine</h2>
+    <p>Só a gestão entra em <strong>Marca</strong> (menu do painel). Isto é o que o cliente lê no site público.</p>
+    <ol class="steps">
+      <li>Altere o <strong>nome da imobiliária</strong> se precisar — aparece no cabeçalho da vitrine.</li>
+      <li>Confirme o <strong>subdomínio</strong>. Se o mudar, o endereço antigo <span class="code">/t/…</span> deixa de abrir esta casa. Avise a equipa.</li>
+      <li>Preencha o <strong>telefone</strong> da casa (mostra-se no topo da vitrine, para o cliente ligar).</li>
+      <li>Escolha a <strong>cor da marca</strong> — tinge botões e acentos da vitrine.</li>
+      <li>Opcional: <strong>URL do logótipo</strong> (ficheiro já na internet, ou um upload).</li>
+      <li>Opcional, planos Pro / Enterprise: <strong>domínio próprio</strong> (ex.: <span class="code">imobiliaria.pt</span>). Grave o FQDN, crie o TXT <span class="code">_imobiflow-verify.{dominio}</span> com <span class="code">imobiflow-verify={token}</span>, clique <strong>Verificar TXT</strong>. Só depois o host serve esta caderneta. localhost e imobiflow.app não são aceites como domínio de cliente.</li>
+      <li>Clique <strong>Guardar</strong>.</li>
+      <li>No fundo do menu, <strong>Ver vitrine</strong> confirma o que o público vê.</li>
+    </ol>
+    <p>Três endereços possíveis para a mesma caderneta:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Modo</th>
+          <th>Exemplo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Caminho na plataforma</td>
+          <td><span class="code">imobiflow.app/t/costa-serra</span></td>
+        </tr>
+        <tr>
+          <td>Subdomínio</td>
+          <td><span class="code">costa-serra.imobiflow.app</span></td>
+        </tr>
+        <tr>
+          <td>Domínio próprio (verificado)</td>
+          <td><span class="code">imobiliaria.pt</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="chapter" id="p5">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">5</span>
+    </div>
+    <h2>Passo 5 · Convidar a equipa</h2>
+    <p>Só a gestão entra em <strong>Equipa</strong>. Cada corretor precisa de um telefone certo: é esse número que recebe o WhatsApp do lead.</p>
+    <ol class="steps">
+      <li>Abra <strong>Equipa</strong>. A tabela lista nome, cargo, quantos imóveis e leads tem cada pessoa.</li>
+      <li>Em <strong>Convidar para o terreno</strong>, preencha nome, email, telefone, palavra-passe inicial e cargo (Corretor ou Gestão).</li>
+      <li>Entregue a palavra-passe em canal seguro. Neste MVP ainda não há «mudar palavra-passe» no perfil.</li>
+      <li>O novo membro entra em <span class="code">/login</span> com o email criado.</li>
+      <li>Para retirar acesso: <strong>Remover</strong>. Não se pode remover a si próprio.</li>
+    </ol>
+    <p>O plano limita o número de contas: Starter 3, Pro 10, Enterprise sem tecto. Se o convite falhar, o email já existe na plataforma ou o plano esgotou.</p>
+    <div class="callout">
+      <strong>O que cada um vê</strong>
+      Gestão: todos os imóveis e leads da casa, Equipa e Marca, pode publicar já. Corretor: só a sua carteira e os seus leads; o anúncio novo fica pendente.
+    </div>
+  </section>
+
+  <section class="chapter" id="p6">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">6</span>
+    </div>
+    <h2>Passo 6 · Cadastrar um imóvel</h2>
+    <p>No painel: <strong>Novo imóvel</strong> ou <strong>Cadastrar no terreno</strong>. O assistente tem quatro passos; pode ir e voltar sem perder dados. Foi feito para o telemóvel na vertical, à porta do prédio.</p>
+    <ol class="steps">
+      <li><strong>Essencial.</strong> Título (o que o cliente lê primeiro), tipologia (Apartamento, Moradia, Terreno, Comercial, Quinta) e descrição. Escreva o que importa no sítio: elevador, garagem, orientação, estado.</li>
+      <li><strong>No terreno.</strong> Morada, cidade e pino no mapa OpenStreetMap. Toque no mapa para ajustar. <strong>Usar a minha localização</strong> pede o GPS do browser — aceite quando estiver no local.</li>
+      <li><strong>Números.</strong> Preço em euros, área em m², quartos e casas de banho. Em terrenos ou lojas, deixe quartos a zero se não se aplicar.</li>
+      <li><strong>Fotografias.</strong> JPEG, PNG, GIF ou WebP, até 8&nbsp;MB, até 12 ficheiros de cada vez. A primeira imagem é a da lista e do mapa. Sem Cloudinary ficam no servidor; com Cloudinary saem para a CDN.</li>
+    </ol>
+    <p>No último ecrã escolha uma saída:</p>
+    <ul>
+      <li><strong>Guardar rascunho</strong> — trabalho interno. O público não vê. Use se faltam fotos ou o preço não está fechado.</li>
+      <li><strong>Enviar para aprovação</strong> (corretor) — estado Pendente. A gestão tem de dar o visto.</li>
+      <li><strong>Publicar na vitrine</strong> (gestão) — o anúncio sai já para o público.</li>
+    </ul>
+    <p>Para corrigir: abra o imóvel em <strong>Imóveis</strong> e percorra o assistente outra vez. <strong>Eliminar</strong> remove o anúncio e os leads associados. O plano limita o número de imóveis (Starter 50, Pro 300, Enterprise ilimitado).</p>
+  </section>
+
+  <section class="chapter" id="p7">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">7</span>
+    </div>
+    <h2>Passo 7 · Aprovar e publicar</h2>
+    <p>Só os anúncios <strong>Publicados</strong> aparecem na vitrine e aceitam pedidos de visita. A gestão controla o que o cliente vê.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Estado</th>
+          <th>Significado</th>
+          <th>Quem muda</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-draft">Rascunho</span></td>
+          <td>Invisível. Trabalho interno, ou anúncio devolvido.</td>
+          <td>Autor, ou gestão a devolver</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-pending">Pendente</span></td>
+          <td>O corretor submeteu; espera o visto.</td>
+          <td>Só a gestão</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-pub">Publicado</span></td>
+          <td>Na vitrine, no mapa, aceita leads.</td>
+          <td>Gestão</td>
+        </tr>
+      </tbody>
+    </table>
+    <ol class="steps">
+      <li>No <strong>Quadro</strong>, o cartão <strong>Aprovação</strong> mostra quantos estão pendentes.</li>
+      <li>Abra o imóvel em <strong>Imóveis</strong>.</li>
+      <li>Leia título, fotos, pino e preço. Se estiver mal: <strong>Devolver a rascunho</strong>.</li>
+      <li>Se estiver bem: <strong>Aprovar e publicar</strong>.</li>
+      <li>Abra <strong>Ver vitrine</strong> e confirme que o anúncio está na lista e no mapa.</li>
+    </ol>
+    <p>Se o corretor editar um imóvel já publicado e pedir outra vez «publicado», o sistema volta a deixá-lo <strong>Pendente</strong>. A gestão volta a ver. A gestão, ao editar, aplica o estado que escolheu.</p>
+  </section>
+
+  <section class="chapter" id="p8">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">8</span>
+    </div>
+    <h2>Passo 8 · O cliente na vitrine</h2>
+    <p>O cliente nunca entra no painel. Percorre o site da agência como um catálogo.</p>
+    <ol class="steps">
+      <li>Abre <span class="code">/t/o-slug</span>, o subdomínio ou o domínio próprio verificado.</li>
+      <li>Vê o nome (e logótipo), o telefone da casa, o mapa e a lista só de publicados.</li>
+      <li>Filtra por tipo, cidade, preço mínimo/máximo e quartos. Clica <strong>Filtrar</strong>.</li>
+      <li>Abre um imóvel: galeria, preço, morada, quartos / WCs / área, descrição, corretor responsável, mapa.</li>
+      <li>Preenche <strong>Falar com o corretor</strong>: nome, telefone/WhatsApp e recado. Não cria conta.</li>
+    </ol>
+    <p>O rodapé admite que a vitrine corre no ImobiFlow; a marca que o cliente lê é a da imobiliária.</p>
+    <div class="callout">
+      <strong>Se o imóvel não aparece</strong>
+      O estado tem de ser Publicado. Corretores: esperem a aprovação. Gestão: abram a ficha e aprovem. Confirme também que está a abrir o slug certo em Marca.
+    </div>
+  </section>
+
+  <section class="chapter" id="p9">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">9</span>
+    </div>
+    <h2>Passo 9 · Lead e WhatsApp</h2>
+    <p>Quando o cliente envia o formulário, o servidor faz isto, por esta ordem:</p>
+    <ol class="steps">
+      <li>Confirma que o imóvel existe, tem corretor e está Publicado. Caso contrário recusa.</li>
+      <li>Aplica limite de ritmo: 8 pedidos por IP a cada 15 minutos, e 4 para o mesmo imóvel (anti-spam).</li>
+      <li>Um campo escondido <span class="code">website</span> descarta bots sem os avisar.</li>
+      <li>Grava o lead ligado à caderneta, àquele imóvel e àquele corretor.</li>
+      <li>Se <span class="code">WHATSAPP_API_URL</span> e a chave existirem, envia a mensagem para o telefone do corretor (título, nome, telefone, recado). Se não existirem, o envio fica em simulação no servidor — o lead não se perde.</li>
+      <li>No painel, <strong>Leads</strong>: a gestão vê todos os da casa; o corretor só os da sua carteira.</li>
+    </ol>
+    <p>Neste MVP não há botão «marcar como tratado». O fecho é no telefone ou no WhatsApp, como no terreno.</p>
+    <p>Se o cliente diz que enviou e o corretor não soube: abra <strong>Leads</strong>. Se a linha está lá, o WhatsApp é que falhou — ligue pelo número da lista. Confirme o telefone do corretor em Equipa (neste MVP, número errado implica recriar o membro ou ajuste técnico).</p>
+  </section>
+
+  <section class="chapter" id="p10">
+    <div class="page-head">
+      <span class="mono">ImobiFlow · Passo a passo</span>
+      <span class="mono">Código</span>
+    </div>
+    <h2>Como o código está organizado</h2>
+    <p>Tudo o que corre está em <span class="code">ImobiFlow/</span>. Ordem útil para ler o projecto:</p>
+    <ol class="steps">
+      <li><span class="code">prisma/schema.prisma</span> — Tenant (caderneta), User, Property, Lead; cargos ADMIN/AGENT; estados DRAFT/PENDING/PUBLISHED; planos STARTER/PRO/ENTERPRISE.</li>
+      <li><span class="code">src/lib/tenant.ts</span> — resolve a caderneta: caminho <span class="code">/t/{slug}</span> pelo slug; hostname com ponto só se o domínio próprio estiver verificado.</li>
+      <li><span class="code">src/middleware.ts</span> — protege <span class="code">/dashboard</span>; se o host não for o da plataforma, reescreve para <span class="code">/t/{chave}</span>.</li>
+      <li><span class="code">src/auth.ts</span> + <span class="code">src/lib/session.ts</span> — login por email/palavra-passe; a sessão valida o utilizador na base; JWT inválido se a conta foi apagada.</li>
+      <li><span class="code">src/app/register</span> e <span class="code">src/lib/actions/auth.ts</span> — criar tenant + primeiro ADMIN.</li>
+      <li><span class="code">src/app/dashboard</span> — Quadro, Imóveis (assistente de 4 passos), Leads, Equipa, Marca.</li>
+      <li><span class="code">src/app/t/[slug]</span> — vitrine pública e ficha do imóvel.</li>
+      <li><span class="code">src/app/api/leads</span> — grava o pedido e chama <span class="code">src/lib/whatsapp.ts</span>.</li>
+      <li><span class="code">src/app/api/upload</span> — fotografias com magic bytes JPEG/PNG/GIF/WebP e verificação de origem.</li>
+    </ol>
+    <p>Stack: Next.js (App Router), Tailwind, Prisma + SQLite local, Auth.js, Leaflet/OpenStreetMap. Em produção: PostgreSQL, Vercel, wildcards <span class="code">{slug}.imobiflow.app</span>.</p>
+
+    <h2 id="p11">O que ainda não faz</h2>
+    <p>O MVP fecha o ciclo terreno → vitrine → WhatsApp. Ainda não inclui: pagamento de planos dentro da app, recuperação de palavra-passe pelo utilizador, estado «lead tratado», chat interno, marca d’água automática nem exportação XML para portais (constam do preçário comercial).</p>
+    <div class="callout">
+      <strong>Regra de ouro no terreno</strong>
+      Fotografe, pine, grave rascunho. A aprovação e o texto fino fazem-se no escritório. O lead nunca espera pelo anúncio perfeito — espera pelo telemóvel do corretor certo.
+    </div>
+    <div class="foot">
+      <span>ImobiFlow · Guia passo a passo · MVP 1.0</span>
+      <span>Caderneta de campo · Agosto 2026</span>
+    </div>
+  </section>
+</body>
+</html>
