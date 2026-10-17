@@ -1,4 +1,4 @@
-import { Plan } from "@prisma/client";
+import { Plan } from "@/generated/prisma/enums";
 
 export const APP_NAME = "ImobiFlow";
 export const APP_TAGLINE = "O fluxo inteligente do mercado imobiliário.";
