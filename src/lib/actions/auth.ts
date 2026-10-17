@@ -4,7 +4,7 @@ import { AuthError } from "next-auth";
 import { hash } from "bcryptjs";
 import { z } from "zod";
 import { redirect } from "next/navigation";
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/prisma/enums";
 import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";

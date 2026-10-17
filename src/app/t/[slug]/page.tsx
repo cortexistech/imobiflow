@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import { resolveTenant } from "@/lib/tenant";
 import { prisma } from "@/lib/prisma";
 import { SearchFilters } from "@/components/portal/search-filters";

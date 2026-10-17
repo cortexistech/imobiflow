@@ -42,7 +42,7 @@ White-label por subdomínio (opcional): `http://atlantica.localhost:3000`
 
 | Variável | Função |
 |----------|--------|
-| `DATABASE_URL` | `file:./dev.db` local, ou URL Neon/PostgreSQL em produção |
+| `DATABASE_URL` | `file:./prisma/dev.db` local (relativo à raiz do projeto), ou URL Neon/PostgreSQL em produção |
 | `AUTH_SECRET` | Segredo JWT (`openssl rand -base64 32`) |
 | `AUTH_URL` | URL pública da app |
 | `NEXT_PUBLIC_ROOT_DOMAIN` | Domínio raiz (`imobiflow.app`) |
@@ -52,7 +52,8 @@ White-label por subdomínio (opcional): `http://atlantica.localhost:3000`
 ## Produção (PostgreSQL)
 
 1. Altere `provider = "postgresql"` em `prisma/schema.prisma` e use `images String[]` em vez de `Json` se preferir arrays nativos.
-2. Aponte `DATABASE_URL` para o Neon.
-3. Faça deploy na Vercel e configure o domínio raiz + wildcards para `{slug}.imobiflow.app`.
-4. Domínios próprios: grave o FQDN em Marca, crie o TXT `_imobiflow-verify.{dominio}` com `imobiflow-verify={token}` e clique em Verificar. O middleware só serve hosts verificados.
+2. Troque o adapter do Prisma: instale `@prisma/adapter-pg` e, em `src/lib/prisma.ts` e `prisma/seed.ts`, use `new PrismaPg({ connectionString: process.env.DATABASE_URL })` no lugar de `PrismaBetterSqlite3`.
+3. Aponte `DATABASE_URL` para o Neon.
+4. Faça deploy na Vercel e configure o domínio raiz + wildcards para `{slug}.imobiflow.app`.
+5. Domínios próprios: grave o FQDN em Marca, crie o TXT `_imobiflow-verify.{dominio}` com `imobiflow-verify={token}` e clique em Verificar. O middleware só serve hosts verificados.
 # imobiflow
